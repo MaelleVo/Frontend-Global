@@ -219,7 +219,7 @@ h1 {
 
 .project-website:hover {
   background-color: white;
-  color: #1f1f1f; /* couleur du texte au hover, noir ou foncé */
+  color: #1f1f1f;
 }
 
 /* TTS PAGE */
@@ -314,11 +314,11 @@ audio {
   align-items: center;
   justify-content: center;
   height: 40px;
-  transition: transform 0.3s ease; /* Animation fluide pour le zoom */
+  transition: transform 0.3s ease;
 }
 
 .download-button:hover {
-  transform: scale(1.2); /* Grossit de 20% au survol */
+  transform: scale(1.2);
 }
 
 .download-button svg {
