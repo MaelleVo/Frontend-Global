@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.DS_Store?
+
+# Node modules (frontend)
+frontend/node_modules/
+
+# Build output
+frontend/dist/
+frontend/build/
+frontend/*.local
+
+# Logs
+logs
+*.log
+
+# Editor directories
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Autres fichiers système
+Thumbs.db

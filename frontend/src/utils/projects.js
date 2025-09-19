@@ -1,0 +1,30 @@
+export const projectsData = [
+  {
+    id: 1,
+    title: "App de Text To Speech",
+    image: "../../public/images/Voxora.png",
+    github: "https://github.com/tonpseudo/projet1",
+    website: "/tts",
+    stacks: [
+      "Python",
+      "React",
+      "Javacsript",
+      "FastAPI",
+      "MongoDB",
+      "Docker",
+      "AWS",
+      "TTS",
+      "Kororo",
+      "Coqui AI",
+      "Vercel",
+    ],
+  },
+  {
+    id: 2,
+    title: "App Background remover",
+    image: "../../public/images/venir.png",
+    github: "https://github.com/tonpseudo/projet2",
+    website: "https://tonsite.com/projet2",
+    stacks: ["Celery", "FastAPI", "Express.JS"],
+  },
+];
