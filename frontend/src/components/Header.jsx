@@ -1,27 +1,39 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { projectsData } from "../utils/projects";
 
 const Header = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token"); // vérifier si connecté
+  const location = useLocation();
+  const token = localStorage.getItem("token");
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // supprimer le token
-    navigate("/login"); // rediriger vers login
+    localStorage.removeItem("token");
+    navigate("/login");
   };
+
+  const currentProject = projectsData.find((project) =>
+    location.pathname.includes(project.website)
+  );
+
+  const name = currentProject ? currentProject.name : "Voxora";
+  const subname = currentProject ? currentProject.subname : "Lab";
 
   return (
     <header>
       <div className="container navbar">
         <h2 className="logo">
-          <span className="logo-span">Voxora</span> Lab
+          <span className="logo-span">{name}</span> {subname}
         </h2>
+        {/* <h2 className="logo">
+          <span className="logo-span">Voxora</span> Lab
+        </h2> */}
         <div className="links-nav">
-          <NavLink
+          {/* <NavLink
             to="/tts"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
             TTS
-          </NavLink>
+          </NavLink> */}
           {/* <NavLink
             to="/voice-clone"
             className={({ isActive }) => (isActive ? "active-link" : "")}

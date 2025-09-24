@@ -2,6 +2,8 @@ export const projectsData = [
   {
     id: 1,
     title: "App de Text To Speech",
+    name: "Voxora",
+    subname: "Lab",
     image: "/images/Voxora.png",
     github: "https://github.com/tonpseudo/projet1",
     website: "/tts",
@@ -22,9 +24,11 @@ export const projectsData = [
   {
     id: 2,
     title: "App Background remover",
+    name: "Background",
+    subname: "Remover",
     image: "/images/venir.png",
     github: "https://github.com/tonpseudo/projet2",
-    website: "https://tonsite.com/projet2",
+    website: "/bg-remover",
     stacks: ["Celery", "FastAPI", "Express.JS"],
   },
 ];
