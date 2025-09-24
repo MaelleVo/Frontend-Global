@@ -4,7 +4,7 @@ import "./App.css";
 // PAGES IMPORT
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Signup from "./pages/Signup";
 import TTS from "./pages/TTS";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/tts" element={<TTS />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );

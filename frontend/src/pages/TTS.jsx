@@ -13,14 +13,14 @@ import { LANG_VOICES } from "../utils/langs";
 const TTS = () => {
   const [text, setText] = useState("");
   const [audioUrl, setAudioUrl] = useState("");
-  const [downloadUrl, setDownloadUrl] = useState(""); // Nouvelle état pour download_url
+  const [downloadUrl, setDownloadUrl] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [lang, setLang] = useState("fr"); // Langue sélectionnée
+  const [lang, setLang] = useState("fr");
   const [voice, setVoice] = useState("ff_siwis");
   const audioRef = useRef(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     const inputText = e.target.value;
@@ -42,31 +42,40 @@ const TTS = () => {
       return;
     }
 
-    // Réinitialise audio et download
     setAudioUrl("");
     setDownloadUrl("");
     setError("");
     setIsLoading(true);
 
-    setIsLoading(true);
+    const token = localStorage.getItem("token");
+
     try {
-      const res = await axios.post(`${API_URL}/tts`, { text, lang, voice });
+      const res = await axios.post(
+        `${API_URL}/tts`,
+        { text, lang, voice },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       const { audio_url, download_url } = res.data.data;
-      const fullAudioUrl = `${API_URL}${audio_url}`;
-      const fullDownloadUrl = `${API_URL}${download_url}`;
-      console.log("URL audio générée :", fullAudioUrl);
-      console.log("URL téléchargement générée :", fullDownloadUrl);
-      setAudioUrl(fullAudioUrl);
-      setDownloadUrl(fullDownloadUrl);
+
+      console.log("URL audio générée :", audio_url);
+      console.log("URL téléchargement générée :", download_url);
+
+      setAudioUrl(audio_url);
+      setDownloadUrl(download_url);
       setError("");
-    } catch (error) {
-      console.error("Erreur détaillée :", error.response || error.message);
-      if (error.response) {
-        setError(
-          `Erreur du serveur : ${
-            error.response.data.detail || error.response.statusText
-          }`
-        );
+    } catch (err) {
+      console.error("Erreur détaillée :", err.response || err.message);
+      if (err.response) {
+        if (err.response.data.detail === "Token invalide") {
+          setError("Vous devez être connecté pour utiliser le TTS.");
+        } else {
+          setError(err.response.data.detail || "Erreur du serveur");
+        }
       } else {
         setError(
           `Impossible de se connecter au serveur. Vérifiez qu'il est en cours d'exécution sur ${API_URL}.`
@@ -149,7 +158,9 @@ const TTS = () => {
 
           <p className="char-count">{text.length} / 200 caractères</p>
         </div>
+
         {error && <p className="error">{error}</p>}
+
         {audioUrl && (
           <div className="audio-container">
             <audio
