@@ -7,28 +7,29 @@ const Signup = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     try {
-      const res = await fetch(`${API_URL}/signup`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
       const data = await res.json();
       if (res.ok) {
         setMessage("Utilisateur créé avec succès !");
         setTimeout(() => navigate("/tts"), 1500);
       } else {
-        setMessage(data.detail || "Erreur inconnue");
+        console.error("Erreur signup:", data);
+        setMessage(data.detail || "Erreur lors de l'inscription");
       }
-    } catch {
-      setMessage("Erreur réseau");
+    } catch (err) {
+      console.error("Erreur réseau signup:", err);
+      setMessage("Erreur réseau : impossible de contacter le serveur");
     }
   };
 

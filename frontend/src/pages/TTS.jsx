@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
@@ -21,6 +21,10 @@ const TTS = () => {
   const audioRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
+
+  if (!API_URL) {
+    console.error("Erreur : VITE_API_URL n'est pas défini dans .env");
+  }
 
   const handleChange = (e) => {
     const inputText = e.target.value;
@@ -56,7 +60,9 @@ const TTS = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
 
@@ -69,9 +75,12 @@ const TTS = () => {
       setDownloadUrl(download_url);
       setError("");
     } catch (err) {
-      console.error("Erreur détaillée :", err.response || err.message);
+      console.error("Erreur détaillée TTS:", err.response || err.message);
       if (err.response) {
-        if (err.response.data.detail === "Token invalide") {
+        if (
+          err.response.data.detail ===
+          "Vous devez être connecté pour utiliser le TTS"
+        ) {
           setError("Vous devez être connecté pour utiliser le TTS.");
         } else {
           setError(err.response.data.detail || "Erreur du serveur");
@@ -95,14 +104,6 @@ const TTS = () => {
     link.click();
     document.body.removeChild(link);
   };
-
-  useEffect(() => {
-    return () => {
-      if (audioUrl && audioUrl.startsWith("blob:")) {
-        URL.revokeObjectURL(audioUrl);
-      }
-    };
-  }, [audioUrl]);
 
   return (
     <section>
