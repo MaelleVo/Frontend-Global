@@ -22,6 +22,7 @@ const Signup = () => {
       const data = await res.json();
       if (res.ok) {
         setMessage("Utilisateur créé avec succès !");
+        navigate("/login");
         setTimeout(() => navigate("/login"), 1500);
       } else {
         console.error("Erreur signup:", data);
