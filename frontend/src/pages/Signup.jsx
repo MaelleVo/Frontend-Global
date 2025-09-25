@@ -36,7 +36,7 @@ const Signup = () => {
   return (
     <main className="container">
       <section className="signup-page">
-        <Link to="/tts" className="back-link">
+        <Link to="/" className="back-link">
           ← Retour
         </Link>
         <h1>Inscription</h1>

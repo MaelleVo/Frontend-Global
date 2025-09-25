@@ -109,7 +109,7 @@ const TTS = () => {
     <section>
       <Header />
       <main>
-        <h1>Transformez votre texte en voix en quelques secondes !</h1>
+        <h2>Transformez votre texte en voix en quelques secondes !</h2>
         <textarea
           className="text-home"
           value={text}

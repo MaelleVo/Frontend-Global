@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 
 const Footer = () => {
   return (
@@ -18,6 +19,12 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
+            {" "}
+            <FontAwesomeIcon
+              icon={faGithub}
+              color="#5170ff"
+              style={{ marginRight: 6 }}
+            />
             GitHub
           </a>
           <a
@@ -25,9 +32,13 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
+            <FontAwesomeIcon
+              icon={faLinkedin}
+              color="#5170ff"
+              style={{ marginRight: 6 }}
+            />
             LinkedIn
           </a>
-          <a href="mailto:maellevolz@gmail.com">Contact</a>
         </div>
         <div>
           <p>© 2025 Projets Data & IA : Volz Maelle</p>

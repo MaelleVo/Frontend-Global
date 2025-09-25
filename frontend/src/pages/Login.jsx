@@ -43,7 +43,7 @@ const Login = () => {
 
   return (
     <section className="signup-page">
-      <Link to="/tts" className="back-link">
+      <Link to="/" className="back-link">
         ← Retour
       </Link>
       <h1>Connexion</h1>
