@@ -68,7 +68,7 @@ const TTS = () => {
 
     try {
       const res = await axios.post(
-        `${TTS_URL}`, // Utilise TTS_URL au lieu de API_URL
+        `${TTS_URL}/tts`, // Utilise TTS_URL au lieu de API_URL
         { text, lang, voice },
         {
           headers,
