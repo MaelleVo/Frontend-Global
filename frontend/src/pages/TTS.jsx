@@ -20,10 +20,13 @@ const TTS = () => {
   const [voice, setVoice] = useState("ff_siwis");
   const audioRef = useRef(null);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  // Utiliser VITE_TTS pour l'endpoint TTS
+  const TTS_URL = import.meta.env.VITE_TTS;
 
-  if (!API_URL) {
-    console.error("Erreur : VITE_API_URL n'est pas défini dans .env");
+  if (!TTS_URL) {
+    console.error("Erreur : VITE_TTS n'est pas défini dans .env");
+    setError("VITE_TTS n'est pas configuré. Vérifiez votre fichier .env.");
+    return null;
   }
 
   const handleChange = (e) => {
@@ -51,28 +54,39 @@ const TTS = () => {
     setError("");
     setIsLoading(true);
 
+    // Déterminer les headers dynamiquement
+    const headers = {
+      "Content-Type": "application/json",
+    };
     const token = localStorage.getItem("token");
+    // Si VITE_API_URL est utilisé pour un backend avec auth (Render), ajouter le token
+    // Sinon, pour Colab (sans auth), ignorer le token
+    const isAuthRequired = import.meta.env.VITE_API_URL && token; // Vérifie si auth est nécessaire
+    if (isAuthRequired) {
+      headers.Authorization = `Bearer ${token}`;
+    }
 
     try {
       const res = await axios.post(
-        `${API_URL}/tts`,
+        `${TTS_URL}`, // Utilise TTS_URL au lieu de API_URL
         { text, lang, voice },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
+          headers,
+          withCredentials: isAuthRequired, // Activer uniquement si auth est requise
         }
       );
 
-      const { audio_url, download_url } = res.data.data;
-
-      console.log("URL audio générée :", audio_url);
-      console.log("URL téléchargement générée :", download_url);
-
-      setAudioUrl(audio_url);
-      setDownloadUrl(download_url);
+      // Ajuster selon la réponse du backend (Colab renvoie un blob, Render une URL)
+      if (res.data.audio_url) {
+        setAudioUrl(res.data.audio_url);
+        setDownloadUrl(res.data.download_url);
+      } else {
+        // Pour Colab (réponse blob)
+        const blob = new Blob([res.data], { type: "audio/wav" });
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+        setDownloadUrl(url); // Pour Colab, download_url n'existe pas, on réutilise audioUrl
+      }
       setError("");
     } catch (err) {
       console.error("Erreur détaillée TTS:", err.response || err.message);
@@ -87,7 +101,7 @@ const TTS = () => {
         }
       } else {
         setError(
-          `Impossible de se connecter au serveur. Vérifiez qu'il est en cours d'exécution sur ${API_URL}.`
+          `Impossible de se connecter au serveur. Vérifiez qu'il est en cours d'exécution sur ${TTS_URL}.`
         );
       }
     } finally {
@@ -99,7 +113,7 @@ const TTS = () => {
     if (!downloadUrl) return;
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.download = "audio.mp3";
+    link.download = "audio.wav"; // Ajusté pour .wav (Colab renvoie WAV)
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

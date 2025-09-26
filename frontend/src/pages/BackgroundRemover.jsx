@@ -39,7 +39,7 @@ const BackgroundRemover = () => {
       if (resultUrl) URL.revokeObjectURL(resultUrl);
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
-  }, []);
+  }, [previewUrl, resultUrl]);
 
   const handleFileChange = (e) => {
     const f = e.target.files?.[0];
