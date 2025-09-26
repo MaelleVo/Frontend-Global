@@ -20,6 +20,7 @@ const TTS = () => {
   const [voice, setVoice] = useState("ff_siwis");
   const audioRef = useRef(null);
 
+  // Utiliser VITE_TTS pour l'endpoint TTS
   const TTS_URL = import.meta.env.VITE_TTS;
 
   if (!TTS_URL) {
@@ -53,11 +54,12 @@ const TTS = () => {
     setError("");
     setIsLoading(true);
 
+    // Déterminer les headers dynamiquement
     const headers = {
       "Content-Type": "application/json",
     };
     const token = localStorage.getItem("token");
-    const isAuthRequired = import.meta.env.VITE_API_URL && token;
+    const isAuthRequired = import.meta.env.VITE_API_URL && token; // Vérifie si auth est nécessaire
     if (isAuthRequired) {
       headers.Authorization = `Bearer ${token}`;
     }
@@ -69,14 +71,15 @@ const TTS = () => {
         {
           headers,
           withCredentials: isAuthRequired,
-          responseType: "blob",
+          responseType: "blob", // Forcer la réponse comme blob pour un fichier audio
         }
       );
 
+      // Gérer la réponse comme un blob WAV
       const blob = new Blob([res.data], { type: "audio/wav" });
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
-      setDownloadUrl(url);
+      setDownloadUrl(url); // Réutiliser la même URL pour le téléchargement
       setError("");
     } catch (err) {
       console.error("Erreur détaillée TTS:", err.response || err.message);
@@ -174,7 +177,7 @@ const TTS = () => {
               src={audioUrl}
               onError={() =>
                 setError(
-                  "Impossible de lire l'audio. Vérifiez l'URL ou le fichier audio."
+                  "Impossible de lire l'audio. Vérifiez le backend ou le fichier audio."
                 )
               }
             />
