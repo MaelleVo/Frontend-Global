@@ -20,7 +20,6 @@ const TTS = () => {
   const [voice, setVoice] = useState("ff_siwis");
   const audioRef = useRef(null);
 
-  // Utiliser VITE_TTS pour l'endpoint TTS
   const TTS_URL = import.meta.env.VITE_TTS;
 
   if (!TTS_URL) {
@@ -54,39 +53,30 @@ const TTS = () => {
     setError("");
     setIsLoading(true);
 
-    // Déterminer les headers dynamiquement
     const headers = {
       "Content-Type": "application/json",
     };
     const token = localStorage.getItem("token");
-    // Si VITE_API_URL est utilisé pour un backend avec auth (Render), ajouter le token
-    // Sinon, pour Colab (sans auth), ignorer le token
-    const isAuthRequired = import.meta.env.VITE_API_URL && token; // Vérifie si auth est nécessaire
+    const isAuthRequired = import.meta.env.VITE_API_URL && token;
     if (isAuthRequired) {
       headers.Authorization = `Bearer ${token}`;
     }
 
     try {
       const res = await axios.post(
-        `${TTS_URL}/tts`, // Utilise TTS_URL au lieu de API_URL
+        `${TTS_URL}/tts`,
         { text, lang, voice },
         {
           headers,
-          withCredentials: isAuthRequired, // Activer uniquement si auth est requise
+          withCredentials: isAuthRequired,
+          responseType: "blob",
         }
       );
 
-      // Ajuster selon la réponse du backend (Colab renvoie un blob, Render une URL)
-      if (res.data.audio_url) {
-        setAudioUrl(res.data.audio_url);
-        setDownloadUrl(res.data.download_url);
-      } else {
-        // Pour Colab (réponse blob)
-        const blob = new Blob([res.data], { type: "audio/wav" });
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        setDownloadUrl(url); // Pour Colab, download_url n'existe pas, on réutilise audioUrl
-      }
+      const blob = new Blob([res.data], { type: "audio/wav" });
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+      setDownloadUrl(url);
       setError("");
     } catch (err) {
       console.error("Erreur détaillée TTS:", err.response || err.message);
@@ -113,7 +103,7 @@ const TTS = () => {
     if (!downloadUrl) return;
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.download = "audio.wav"; // Ajusté pour .wav (Colab renvoie WAV)
+    link.download = "audio.wav";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
